@@ -38,7 +38,11 @@ def python_repl(
     code: Annotated[str, "The python code to execute to generate your chart."]
 ):
     """Use this to execute python code. If you want to see the output of a value,
-    you should print it out with `print(...)`. This is visible to the user."""
+    you should print it out with `print(...)`. This is visible to the user.
+    if any error occurs while running the code go back to the agent or code provider to see the error and give the new code and run again.
+
+
+    """
     try:
         result = repl.run(code)
     except BaseException as e:
@@ -181,7 +185,7 @@ app = workflow.compile()
 inputs = {"messages": [HumanMessage(content="what is the weather in sf")]}
 de = app.invoke(inputs)
 
-print(de)
+#print(de)
 #for output in app.stream(inputs):
     # stream() yields dictionaries with output keyed by node name
 #    for key, value in output.items():
@@ -191,14 +195,18 @@ print(de)
 #    print("\n---\n")
 
 
-inputs = {"messages": [HumanMessage(content="write code on integrating a cos function and returning the value")]}
-de = app.invoke(inputs)
+inputs = {"messages": [HumanMessage(content="Take a input list = [1,53,23,2,34,14,88] use quick sort to sort the list .  ")]}
 
-print(de)
-
+for s in app.stream(
+    inputs,
+    
+    {"recursion_limit": 150},
+):
+    print(s)
+    print("---")
 
 
 inputs = {"messages": [HumanMessage(content="write a blog on LLM's and save the file in blog1.txt")]}
 de = app.invoke(inputs)
 
-print(de)
+#print(de)
